@@ -20,8 +20,13 @@ jobs:
           ref: 'release'
       - name: Download file
         env:
-          GEOIP_URL: ${{ secrets.GEOIP_URL }}
-        run: wget -qO ./country_cn.mmdb "${GEOIP_URL}"
+          GEOIP_CN_URL: ${{ secrets.GEOIP_CN_URL }}
+          GEOIP_COUNTRY_URL: ${{ secrets.GEOIP_COUNTRY_URL }}
+          GEOIP_CITY_URL: ${{ secrets.GEOIP_CITY_URL }}
+        run: |
+          wget -qO ./country_cn.mmdb "${GEOIP_URL}"
+          wget -qO ./country.mmdb "${GEOIP_COUNTRY_URL}"
+          wget -qO ./city.mmdb "${GEOIP_CITY_URL}"
           
       - name: Git push
         run: |
@@ -38,7 +43,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            artifacts: "country_cn.mmdb"
+            artifacts: "./*.mmdb"
             tag: ${{ steps.date.outputs.date }}
             name: ${{ steps.date.outputs.date }}
             generateReleaseNotes: true
