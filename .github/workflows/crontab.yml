@@ -26,8 +26,8 @@ jobs:
 
       - name: Push Tag
         run: |
-          git config --global user.name 'caaby'
-          git config --global user.email 'caaby@users.noreply.github.com'
+          git config --local user.name 'caaby'
+          git config --local user.email 'caaby@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
           git tag ${{steps.tag.outputs.result}}
           git push origin ${{steps.tag.outputs.result}}
