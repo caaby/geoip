@@ -21,7 +21,7 @@ jobs:
       - name: Download file
         env:
           GEOIP_URL: ${{ secrets.GEOIP_URL }}
-        run: wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
+        run: wget -qO ./country_cn.mmdb "${GEOIP_URL}"
           
       - name: Git push
         run: |
@@ -38,8 +38,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            artifacts: "Country_CN.mmdb"
+            artifacts: "country_cn.mmdb"
             tag: ${{ steps.date.outputs.date }}
             name: ${{ steps.date.outputs.date }}
             generateReleaseNotes: true
-            body: "订阅地址: https://github.com/Caaby/geoip/raw/release/Country_CN.mmdb"
+            body: "订阅地址: https://raw.githubusercontent.com/caaby/geoip/release/country_cn.mmdb"
