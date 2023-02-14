@@ -24,7 +24,7 @@ jobs:
           GEOIP_COUNTRY_URL: ${{ secrets.GEOIP_COUNTRY_URL }}
           GEOIP_CITY_URL: ${{ secrets.GEOIP_CITY_URL }}
         run: |
-          wget -qO ./country_cn.mmdb "${GEOIP_URL}"
+          wget -qO ./country_cn.mmdb "${GEOIP_CN_URL}"
           wget -qO ./country.mmdb "${GEOIP_COUNTRY_URL}"
           wget -qO ./city.mmdb "${GEOIP_CITY_URL}"
           
