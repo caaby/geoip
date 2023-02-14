@@ -1,0 +1,2 @@
+# geoip
+geoip cn
