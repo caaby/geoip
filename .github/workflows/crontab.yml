@@ -35,12 +35,11 @@ jobs:
           git push origin ${{ steps.date.outputs.date }}
 
       - name: Release
-        id: release-country
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ steps.date.outputs.date }}
-          release_name: ${{ steps.date.outputs.date }}
-          draft: false
-          prerelease: false
+            token: ${{ secrets.GITHUB_TOKEN }}
+            artifacts: "Country_CN.mmdb"
+            tag: ${{ steps.date.outputs.date }}
+            name: ${{ steps.date.outputs.date }}
+            generateReleaseNotes: true
+            body: ${{ steps.date.outputs.date }}
