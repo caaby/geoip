@@ -29,7 +29,7 @@ jobs:
           git config --local user.name "GitHub Actio"
           git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git commit --allow-empty -am "update"
-          git push
+          git push origin release
           git tag ${{ steps.date.outputs.date }}
           git push origin ${{ steps.date.outputs.date }}
 
