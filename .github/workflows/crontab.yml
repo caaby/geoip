@@ -3,54 +3,43 @@ name: Weekly Build
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 12 * * 1
+  - cron: 0 12 * * 1
 
 jobs:
   build:
-    name: Pull and Release
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: git tag
-        uses: actions/github-script@v3
-        id: tag
-        with:
-          script: |
-            const now = new Date()
-            return `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`
-          result-encoding: string
-
-      - name: Push Tag
-        run: |
-          git config --local user.name 'caaby'
-          git config --local user.email 'caaby@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git tag ${{steps.tag.outputs.result}}
-          git push origin ${{steps.tag.outputs.result}}
-
       - name: Download file
         env:
           GEOIP_URL: ${{ secrets.GEOIP_URL }}
         run: |
-          mkdir dist
-          wget -O ./dist/Country_CN.mmdb "${GEOIP_URL}"
+            wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
 
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Checkout branch "release"
+        uses: actions/checkout@latest
+        with:
+          ref: 'release'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Actio"
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit --allow-empty -am "update"
+          git push
+          git tag ${{ steps.date.outputs.date }}
+          git push origin ${{ steps.date.outputs.date }}
+
+      - name: Release
+        id: release-country
+        uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: dist/Country_CN.mmdb
-          tag_name: ${{steps.tag.outputs.result}}
-
-      - name: Upload to release branch
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: release
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.date.outputs.date }}
+          release_name: ${{ steps.date.outputs.date }}
+          draft: false
+          prerelease: false
