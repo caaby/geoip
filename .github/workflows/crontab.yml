@@ -19,9 +19,9 @@ jobs:
         with:
           ref: 'release'
       - name: Download file
-          env:
-            GEOIP_URL: ${{ secrets.GEOIP_URL }}
-          run: wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
+        env:
+          GEOIP_URL: ${{ secrets.GEOIP_URL }}
+        run: wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
           
       - name: Git push
         run: |
