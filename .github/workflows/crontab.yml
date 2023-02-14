@@ -3,19 +3,13 @@ name: Weekly Build
 on:
   workflow_dispatch:
   schedule:
-  - cron: 0 12 * * 1
+    - cron: 0 12 * * 1
 
 jobs:
   build:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Download file
-        env:
-          GEOIP_URL: ${{ secrets.GEOIP_URL }}
-        run: |
-            wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
-
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
@@ -24,6 +18,12 @@ jobs:
         uses: actions/checkout@latest
         with:
           ref: 'release'
+      - name: Download file
+          env:
+            GEOIP_URL: ${{ secrets.GEOIP_URL }}
+          run: wget -qO ./Country_CN.mmdb "${GEOIP_URL}"
+          
+      - name: Git push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actio"
