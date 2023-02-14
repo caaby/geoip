@@ -42,4 +42,4 @@ jobs:
             tag: ${{ steps.date.outputs.date }}
             name: ${{ steps.date.outputs.date }}
             generateReleaseNotes: true
-            body: ${{ steps.date.outputs.date }}
+            body: "订阅地址: https://github.com/Caaby/geoip/raw/release/Country_CN.mmdb"
