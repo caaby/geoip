@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
-        run: echo "today=$(date +'%Y%m%d')" >> $GITHUB_STATE
+        id: date
+        run: echo "today=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Checkout branch "release"
@@ -36,7 +37,7 @@ jobs:
           git add .
           git commit --allow-empty -am "update"
           git push origin release
-          git tag ${{ env.today }}
+          git tag ${{ steps.date.outputs.today }}
           git push origin ${{ env.today }}
 
       - name: Release
@@ -44,6 +45,6 @@ jobs:
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             artifacts: "./*.mmdb"
-            tag: ${{ env.today }}
-            name: ${{ env.today }}
+            tag: ${{ steps.date.outputs.today }}
+            name: ${{ steps.date.outputs.today }}
             generateReleaseNotes: true
