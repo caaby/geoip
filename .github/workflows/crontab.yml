@@ -40,7 +40,7 @@ jobs:
           git push origin ${{ env.today }}
 
       - name: Release
-        uses: ncipollo/release-action@v2
+        uses: ncipollo/release-action@v1
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             artifacts: "./*.mmdb"
