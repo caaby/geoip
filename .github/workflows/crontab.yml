@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+        run: echo "today=$(date +'%Y%m%d')" >> $GITHUB_STATE
+        shell: bash
 
       - name: Checkout branch "release"
         uses: actions/checkout@v3
@@ -36,14 +36,14 @@ jobs:
           git add .
           git commit --allow-empty -am "update"
           git push origin release
-          git tag ${{ steps.date.outputs.date }}
-          git push origin ${{ steps.date.outputs.date }}
+          git tag ${{ env.today }}
+          git push origin ${{ env.today }}
 
       - name: Release
         uses: ncipollo/release-action@v1
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             artifacts: "./*.mmdb"
-            tag: ${{ steps.date.outputs.date }}
-            name: ${{ steps.date.outputs.date }}
+            tag: ${{ env.today }}
+            name: ${{ env.today }}
             generateReleaseNotes: true
