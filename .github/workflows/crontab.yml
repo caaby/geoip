@@ -47,4 +47,3 @@ jobs:
             tag: ${{ steps.date.outputs.date }}
             name: ${{ steps.date.outputs.date }}
             generateReleaseNotes: true
-            body:  "订阅地址\n  country_cn.mmdb: https://raw.githubusercontent.com/caaby/geoip/release/country_cn.mmdb\n  country.mmdb: https://raw.githubusercontent.com/caaby/geoip/release/country.mmdb\n  city.mmdb: https://raw.githubusercontent.com/caaby/geoip/release/city.mmdb"
