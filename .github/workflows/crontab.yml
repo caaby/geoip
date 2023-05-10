@@ -31,8 +31,8 @@ jobs:
           
       - name: Git push
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Actio"
+          git config --local user.email "fangling@outlook.com"
+          git config --local user.name "caaby"
           git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add .
           git commit --allow-empty -am "update"
