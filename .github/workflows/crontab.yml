@@ -35,7 +35,7 @@ jobs:
           git config --local user.name "caaby"
           git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add .
-          git commit --allow-empty -am "update"
+          git commit --allow-empty -am "Deploy to GitHub action "
           git push origin release
           git tag ${{ steps.date.outputs.today }}
           git push origin ${{ env.today }}
