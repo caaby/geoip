@@ -16,7 +16,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: release
-
+      
+      - name: Get current date
+        id: date
+        run: echo "today=$(date -u +'%Y%m%d')" >> "$GITHUB_OUTPUT"
       - name: Download databases
         env:
           LICENSE_KEY: ${{ secrets.License_key }}
@@ -41,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "country.mmdb,city.mmdb"
-          tag: ${{ github.run_number }}-${{ github.run_id }}
-          name: ${{ github.run_number }}-${{ github.run_id }}
+          tag: ${{ steps.date.outputs.today }}
+          name: ${{ steps.date.outputs.today }}
           allowUpdates: true
           generateReleaseNotes: true
