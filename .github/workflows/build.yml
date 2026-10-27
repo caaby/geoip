@@ -1,0 +1,47 @@
+
+name: Monthly Build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 1 * *"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: release
+
+      - name: Download databases
+        env:
+          LICENSE_KEY: ${{ secrets.License_key }}
+        run: |
+          set -e
+          for db in Country City; do
+            wget -qO "$db.tar.gz" "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-$db&license_key=$LICENSE_KEY&suffix=tar.gz"
+            tar -xzf "$db.tar.gz"
+            find . -path "*/GeoLite2-$db.mmdb" -exec cp {} "$( [ "$db" = Country ] && echo country.mmdb || echo city.mmdb )" \;
+            rm -rf GeoLite2-GeoLite2-$db-* "$db.tar.gz"
+          done
+          test -s country.mmdb && test -s city.mmdb
+
+      - name: Commit databases
+        run: |
+          git config user.name "caaby"
+          git config user.email "caaby@me.com"
+          git add country.mmdb city.mmdb
+          git diff --cached --quiet || { git commit -am "Update GeoIP databases"; git push origin HEAD:release; }
+
+      - uses: ncipollo/release-action@v1.21.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "country.mmdb,city.mmdb"
+          tag: ${{ github.run_number }}-${{ github.run_id }}
+          name: ${{ github.run_number }}-${{ github.run_id }}
+          allowUpdates: true
+          generateReleaseNotes: true
